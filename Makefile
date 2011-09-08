@@ -1,7 +1,7 @@
 # mostly copied from Eden Li's mysql interface
 # "Who is supposed to grok this mess?" --- phf
 
-include $(GOROOT)/src/Make.$(GOARCH)
+include $(GOROOT)/src/Make.inc
 
 TARG=db/sqlite3
 CGOFILES=low.go
