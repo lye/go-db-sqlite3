@@ -18,19 +18,19 @@ import (
 )
 
 // stolen from fmt package, special-cases interface values
-func getField(v *reflect.StructValue, i int) reflect.Value {
+func getField(v *reflect.Value, i int) reflect.Value {
 	val := v.Field(i);
-	if i, ok := val.(*reflect.InterfaceValue); ok {
-		if inter := i.Interface(); inter != nil {
-			return reflect.NewValue(inter)
+	if val.CanInterface() {
+		if inter := val.Interface(); inter != nil {
+			return reflect.ValueOf(inter)
 		}
 	}
 	return val;
 }
 
-func struct2array(s *reflect.StructValue) (r []interface{}) {
+func struct2array(s *reflect.Value) (r []reflect.Value) {
 	l := s.NumField();
-	r = make([]interface{}, l);
+	r = make([]reflect.Value, l);
 	for i := 0; i < l; i++ {
 		r[i] = getField(s, i)
 	}
@@ -47,17 +47,17 @@ func (self *Connection) ExecuteClassic(statement db.Statement, parameters ...int
 		return;
 	}
 
-	p := reflect.NewValue(parameters).(*reflect.StructValue);
+	p := reflect.ValueOf(parameters);
 
 	if p.NumField() != s.handle.sqlBindParameterCount() {
 		error = &DriverError{"Execute: Number of parameters doesn't match!"};
 		return;
 	}
 
-	pa := struct2array(p);
+	pa := struct2array(&p);
 
 	for k, v := range pa {
-		q := v.(*reflect.StringValue).Get();
+		q := v.String();
 		rc := s.handle.sqlBindText(k, q);
 
 		if rc != StatusOk {
