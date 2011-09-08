@@ -40,7 +40,7 @@ func struct2array(s *reflect.StructValue) (r []interface{}) {
 // Execute precompiled statement with given parameters
 // (if any). The statement stays valid even if we fail
 // to execute with given parameters.
-func (self *Connection) ExecuteClassic(statement db.Statement, parameters ...) (rset db.ClassicResultSet, error os.Error) {
+func (self *Connection) ExecuteClassic(statement db.Statement, parameters ...interface{}) (rset db.ClassicResultSet, error os.Error) {
 	s, ok := statement.(*Statement);
 	if !ok {
 		error = &DriverError{"Execute: Not an sqlite3 statement!"};
