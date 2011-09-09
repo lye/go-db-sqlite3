@@ -18,6 +18,7 @@ func main() {
 	nsc, e := sqlite3.Open("test.db");
 	if e != nil {
 		fmt.Printf("error: %s\n", e.String())
+		return
 	}
 	fmt.Printf("connection: %s\n", nsc);
 	c := nsc.(db.ClassicConnection);
@@ -26,6 +27,7 @@ func main() {
 	s, e := c.Prepare("SELECT rowid, * FROM users WHERE password=?");
 	if e != nil {
 		fmt.Printf("error: %s\n", e.String())
+		return
 	}
 	fmt.Printf("statement: %s\n", s);
 
@@ -33,6 +35,7 @@ func main() {
 	cc, e := c.ExecuteClassic(s, "somepassword");
 	if e != nil {
 		fmt.Printf("error: %s\n", e.String())
+		return
 	}
 	fmt.Printf("cursor: %s\n", cc);
 
@@ -40,6 +43,7 @@ func main() {
 	d, e := db.ClassicFetchAll(cc);
 	if e != nil {
 		fmt.Printf("error: %s\n", e.String())
+		return
 	}
 	fmt.Printf("cursor: %s\n", cc);
 	fmt.Printf("data: %s\n", d);
@@ -48,12 +52,14 @@ func main() {
 	e = cc.Close();
 	if e != nil {
 		fmt.Printf("error: %s\n", e.String())
+		return
 	}
 
 	fmt.Printf("About to re-execute query\n");
 	cc, e = c.ExecuteClassic(s, "somepassword");
 	if e != nil {
 		fmt.Printf("error: %s\n", e.String())
+		return
 	}
 	fmt.Printf("cursor: %s\n", cc);
 
@@ -61,6 +67,7 @@ func main() {
 	r := cc.Fetch();
 	if r.Error() != nil {
 		fmt.Printf("error: %s\n", r.Error().String())
+		return
 	}
 	fmt.Printf("cursor: %s\n", cc);
 	fmt.Printf("data: %s\n", r);
@@ -69,6 +76,7 @@ func main() {
 	f := cc.Fetch();
 	if f.Error() != nil {
 		fmt.Printf("error: %s\n", f.Error().String())
+		return
 	}
 	fmt.Printf("cursor: %s\n", cc);
 	fmt.Printf("data: %s\n", f);
@@ -78,6 +86,7 @@ func main() {
 	fmt.Printf("%s\n", g);
 	if e != nil {
 		fmt.Printf("error: %s\n", e.String())
+		return
 	}
 	fmt.Printf("cursor: %s\n", cc);
 	for _, y := range g {
@@ -88,12 +97,14 @@ func main() {
 	e = cc.Close();
 	if e != nil {
 		fmt.Printf("error: %s\n", e.String())
+		return
 	}
 
 	fmt.Printf("About to re-execute query\n");
 	rs, e := c.Execute(s, "somepassword");
 	if e != nil {
 		fmt.Printf("error: %s\n", e.String())
+		return
 	}
 	fmt.Printf("resultset: %s\n", rs);
 
@@ -110,12 +121,14 @@ func main() {
 	e = s.Close();
 	if e != nil {
 		fmt.Printf("error: %s\n", e.String())
+		return
 	}
 
 	fmt.Printf("About to execute directly\n");
 	d, e = db.ExecuteDirectly(c, "SELECT * FROM users");
 	if e != nil {
 		fmt.Printf("error: %s\n", e.String())
+		return
 	}
 	fmt.Printf("data: %s\n", d);
 
@@ -123,5 +136,6 @@ func main() {
 	e = c.Close();
 	if e != nil {
 		fmt.Printf("error: %s\n", e.String())
+		return
 	}
 }
