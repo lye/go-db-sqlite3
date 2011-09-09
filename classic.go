@@ -85,8 +85,16 @@ func (self *Connection) ExecuteClassic(statement db.Statement, parameters ...int
 		rs.connection = self;
 		rs.more = true;
 		rset = rs;
+	} else if rc == StatusDone {
+		// even if there are no results, we should still return a result set
+		rs := new(ClassicResultSet);
+		rs.statement = s;
+		rs.connection = self;
+		rs.more = false;
+		rset = rs;
+		s.clear()
 	} else {
-		// clean up after error or done
+		// clean up after error
 		s.clear()
 	}
 
