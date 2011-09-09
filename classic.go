@@ -19,21 +19,25 @@ import (
 
 // stolen from fmt package, special-cases interface values
 func getField(v *reflect.Value, i int) reflect.Value {
-	val := v.Field(i);
+	val := v.Index(i)
+
 	if val.CanInterface() {
 		if inter := val.Interface(); inter != nil {
 			return reflect.ValueOf(inter)
 		}
 	}
+
 	return val;
 }
 
 func struct2array(s *reflect.Value) (r []reflect.Value) {
-	l := s.NumField();
+	l := s.Len();
 	r = make([]reflect.Value, l);
+
 	for i := 0; i < l; i++ {
 		r[i] = getField(s, i)
 	}
+
 	return;
 }
 
@@ -49,7 +53,7 @@ func (self *Connection) ExecuteClassic(statement db.Statement, parameters ...int
 
 	p := reflect.ValueOf(parameters);
 
-	if p.NumField() != s.handle.sqlBindParameterCount() {
+	if p.Len() != s.handle.sqlBindParameterCount() {
 		error = &DriverError{"Execute: Number of parameters doesn't match!"};
 		return;
 	}
