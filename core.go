@@ -104,6 +104,13 @@ func open(url string) (connection db.Connection, error os.Error) {
 	flags &^= OpenNoMutex;
 	flags |= OpenFullMutex;
 
+	// If we don't have either OpenReadOnly or OpenReadWrite set,
+	// default to OpenReadWrite. Omitting both will cause Sqlite3
+	// to barf (with a no memory exception, strangely enough) 
+	if flags & (OpenReadOnly | OpenReadWrite) == 0 {
+		flags |= OpenReadWrite
+	}
+
 	conn := new(Connection);
 	var rc int;
 	conn.handle, rc = sqlOpen(name, flags, vfs);
