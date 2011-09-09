@@ -4,17 +4,17 @@
 
 package sqlite3
 
-import "os";
+import "os"
 
 // SQLite prepared statements.
 type Statement struct {
-	handle		*sqlStatement;
-	connection	*Connection;
+	handle     *sqlStatement
+	connection *Connection
 }
 
 // Original query language string.
 func (self *Statement) String() string {
-	return self.handle.sqlSql();
+	return self.handle.sqlSql()
 }
 
 // Free all associated resources. After a call to
@@ -22,25 +22,25 @@ func (self *Statement) String() string {
 // If results from the statement are still being
 // processed, bad things will happen.
 func (self *Statement) Close() (error os.Error) {
-	rc := self.handle.sqlFinalize();
+	rc := self.handle.sqlFinalize()
 	if rc != StatusOk {
 		error = self.connection.error()
 	}
-	self.handle = nil;
-	self.connection = nil;
-	return;
+	self.handle = nil
+	self.connection = nil
+	return
 }
 
 // Make the statement ready for re-binding parameters
 // and re-execution.
 func (self *Statement) clear() (error os.Error) {
-	rc := self.handle.sqlReset();
+	rc := self.handle.sqlReset()
 	if rc == StatusOk {
-		rc := self.handle.sqlClearBindings();
+		rc := self.handle.sqlClearBindings()
 		if rc == StatusOk {
 			return
 		}
 	}
-	error = self.connection.error();
-	return;
+	error = self.connection.error()
+	return
 }

@@ -42,32 +42,32 @@ import "unsafe"
 
 // The type codes returned by sqlite3_column_type().
 const (
-	_ = iota;
-	sqlIntegerType;
-	sqlFloatType;
-	sqlTextType;
-	sqlBlobType;
-	sqlNullType;
+	_ = iota
+	sqlIntegerType
+	sqlFloatType
+	sqlTextType
+	sqlBlobType
+	sqlNullType
 )
 
 // Constants for sqlite3_config() used only internally.
 // In fact only *one* is used. See SQLite documentation
 // for details.
 const (
-	configSingleThread = int(C.SQLITE_CONFIG_SINGLETHREAD);
-	configMultiThread = int(C.SQLITE_CONFIG_MULTITHREAD);
-	configSerialized = int(C.SQLITE_CONFIG_SERIALIZED);
-	configMalloc = int (C.SQLITE_CONFIG_MALLOC);
-	configGetMalloc = int (C.SQLITE_CONFIG_GETMALLOC);
-	configScratch = int(C.SQLITE_CONFIG_SCRATCH);
-	configPageCache = int(C.SQLITE_CONFIG_PAGECACHE);
-	configHeap = int(C.SQLITE_CONFIG_HEAP);
-	configMemStatus = int(C.SQLITE_CONFIG_MEMSTATUS);
-	configMutex = int(C.SQLITE_CONFIG_MUTEX);
-	configGetMutex = int(C.SQLITE_CONFIG_GETMUTEX);
-	configLookAside = int(C.SQLITE_CONFIG_LOOKASIDE);
-	configPCache = int(C.SQLITE_CONFIG_PCACHE);
-	configGetPCache = int(C.SQLITE_CONFIG_GETPCACHE);
+	configSingleThread = int(C.SQLITE_CONFIG_SINGLETHREAD)
+	configMultiThread  = int(C.SQLITE_CONFIG_MULTITHREAD)
+	configSerialized   = int(C.SQLITE_CONFIG_SERIALIZED)
+	configMalloc       = int(C.SQLITE_CONFIG_MALLOC)
+	configGetMalloc    = int(C.SQLITE_CONFIG_GETMALLOC)
+	configScratch      = int(C.SQLITE_CONFIG_SCRATCH)
+	configPageCache    = int(C.SQLITE_CONFIG_PAGECACHE)
+	configHeap         = int(C.SQLITE_CONFIG_HEAP)
+	configMemStatus    = int(C.SQLITE_CONFIG_MEMSTATUS)
+	configMutex        = int(C.SQLITE_CONFIG_MUTEX)
+	configGetMutex     = int(C.SQLITE_CONFIG_GETMUTEX)
+	configLookAside    = int(C.SQLITE_CONFIG_LOOKASIDE)
+	configPCache       = int(C.SQLITE_CONFIG_PCACHE)
+	configGetPCache    = int(C.SQLITE_CONFIG_GETPCACHE)
 )
 
 // These constants can be or'd together and passed as the
@@ -76,22 +76,22 @@ const (
 // for details. Note that we always force OpenFullMutex,
 // so passing OpenNoMutex has no effect. See also FlagURL().
 const (
-	OpenReadOnly		= int(C.SQLITE_OPEN_READONLY);
-	OpenReadWrite		= int(C.SQLITE_OPEN_READWRITE);
-	OpenCreate		= int(C.SQLITE_OPEN_CREATE);
-	OpenDeleteOnClose	= int(C.SQLITE_OPEN_DELETEONCLOSE);	// VFS only
-	OpenExclusive		= int(C.SQLITE_OPEN_EXCLUSIVE);	// VFS only
-	OpenMainDb		= int(C.SQLITE_OPEN_MAIN_DB);	// VFS only
-	OpenTempDb		= int(C.SQLITE_OPEN_TEMP_DB);	// VFS only
-	OpenTransientDb		= int(C.SQLITE_OPEN_TRANSIENT_DB);	// VFS only
-	OpenMainJournal		= int(C.SQLITE_OPEN_MAIN_JOURNAL);	// VFS only
-	OpenTempJournal		= int(C.SQLITE_OPEN_TEMP_JOURNAL);	// VFS only
-	OpenSubJournal		= int(C.SQLITE_OPEN_SUBJOURNAL);	// VFS only
-	OpenMasterJournal	= int(C.SQLITE_OPEN_MASTER_JOURNAL);	// VFS only
-	OpenNoMutex		= int(C.SQLITE_OPEN_NOMUTEX);
-	OpenFullMutex		= int(C.SQLITE_OPEN_FULLMUTEX);
-	OpenSharedCache		= int(C.SQLITE_OPEN_SHAREDCACHE);
-	OpenPrivateCache	= int(C.SQLITE_OPEN_PRIVATECACHE);
+	OpenReadOnly      = int(C.SQLITE_OPEN_READONLY)
+	OpenReadWrite     = int(C.SQLITE_OPEN_READWRITE)
+	OpenCreate        = int(C.SQLITE_OPEN_CREATE)
+	OpenDeleteOnClose = int(C.SQLITE_OPEN_DELETEONCLOSE)  // VFS only
+	OpenExclusive     = int(C.SQLITE_OPEN_EXCLUSIVE)      // VFS only
+	OpenMainDb        = int(C.SQLITE_OPEN_MAIN_DB)        // VFS only
+	OpenTempDb        = int(C.SQLITE_OPEN_TEMP_DB)        // VFS only
+	OpenTransientDb   = int(C.SQLITE_OPEN_TRANSIENT_DB)   // VFS only
+	OpenMainJournal   = int(C.SQLITE_OPEN_MAIN_JOURNAL)   // VFS only
+	OpenTempJournal   = int(C.SQLITE_OPEN_TEMP_JOURNAL)   // VFS only
+	OpenSubJournal    = int(C.SQLITE_OPEN_SUBJOURNAL)     // VFS only
+	OpenMasterJournal = int(C.SQLITE_OPEN_MASTER_JOURNAL) // VFS only
+	OpenNoMutex       = int(C.SQLITE_OPEN_NOMUTEX)
+	OpenFullMutex     = int(C.SQLITE_OPEN_FULLMUTEX)
+	OpenSharedCache   = int(C.SQLITE_OPEN_SHAREDCACHE)
+	OpenPrivateCache  = int(C.SQLITE_OPEN_PRIVATECACHE)
 )
 
 // If something goes wrong on this level, we simply bomb
@@ -107,39 +107,39 @@ func sqlPanic(str string) {
 // Wrappers around the most important SQLite types.
 
 type sqlConnection struct {
-	handle *C.sqlite3;
+	handle *C.sqlite3
 }
 
 type sqlStatement struct {
-	handle *C.sqlite3_stmt;
+	handle *C.sqlite3_stmt
 }
 
 type sqlValue struct {
-	handle *C.sqlite3_value;
+	handle *C.sqlite3_value
 }
 
 type sqlBlob struct {
-	handle *C.sqlite3_blob;
+	handle *C.sqlite3_blob
 }
 
 // Wrappers around the most important SQLite functions.
 
 func sqlConfig(option int) int {
-	return int(C.wsq_config(C.int(option)));
+	return int(C.wsq_config(C.int(option)))
 }
 
 func sqlVersion() string {
-	cp := C.sqlite3_libversion();
+	cp := C.sqlite3_libversion()
 	if cp == nil {
 		// The call can't really fail since it returns
 		// a string constant, but let's be safe...
-		sqlPanic("can't get library version");
+		sqlPanic("can't get library version")
 	}
-	return C.GoString(cp);
+	return C.GoString(cp)
 }
 
 func sqlVersionNumber() int {
-	return int(C.sqlite3_libversion_number());
+	return int(C.sqlite3_libversion_number())
 }
 
 func sqlSourceId() string {
@@ -148,79 +148,79 @@ func sqlSourceId() string {
 	// details; we can't expect wide availability yet,
 	// for example Debian Lenny ships SQLite 3.5.9 only.
 	if sqlVersionNumber() < 3006018 {
-		return "unknown source id";
+		return "unknown source id"
 	}
 
-	cp := C.sqlite3_sourceid();
+	cp := C.sqlite3_sourceid()
 	if cp == nil {
 		// The call can't really fail since it returns
 		// a string constant, but let's be safe...
-		sqlPanic("can't get library sourceid");
+		sqlPanic("can't get library sourceid")
 	}
-	return C.GoString(cp);
+	return C.GoString(cp)
 }
 
 func sqlOpen(name string, flags int, vfs string) (conn *sqlConnection, rc int) {
-	conn = new(sqlConnection);
+	conn = new(sqlConnection)
 
-	p := C.CString(name);
+	p := C.CString(name)
 	if len(vfs) > 0 {
-		q := C.CString(vfs);
-		rc = int(C.sqlite3_open_v2(p, &conn.handle, C.int(flags), q));
-		C.free(unsafe.Pointer(q));
+		q := C.CString(vfs)
+		rc = int(C.sqlite3_open_v2(p, &conn.handle, C.int(flags), q))
+		C.free(unsafe.Pointer(q))
 	} else {
 		rc = int(C.sqlite3_open_v2(p, &conn.handle, C.int(flags), nil))
 	}
-	C.free(unsafe.Pointer(p));
+	C.free(unsafe.Pointer(p))
 
 	// We could get a handle even if there's an error, see
 	// http://www.sqlite.org/c3ref/open.html for details.
 	// Initially we didn't want to return a connection on
 	// error, but we actually have to since we want to fill
 	// in a SystemError struct. Sigh.
-//	if rc != StatusOk && conn.handle != nil {
-//		_ = conn.sqlClose();
-//		conn = nil;
-//	}
+	//	if rc != StatusOk && conn.handle != nil {
+	//		_ = conn.sqlClose();
+	//		conn = nil;
+	//	}
 
-	return;
+	return
 }
 
 // Wrappers as connection methods.
 
 func (self *sqlConnection) sqlClose() int {
-	return int(C.sqlite3_close(self.handle));
+	return int(C.sqlite3_close(self.handle))
 }
 
 func (self *sqlConnection) sqlChanges() int {
-	return int(C.sqlite3_changes(self.handle));
+	return int(C.sqlite3_changes(self.handle))
 }
 
 func (self *sqlConnection) sqlLastInsertRowId() int64 {
-	return int64(C.sqlite3_last_insert_rowid(self.handle));
+	return int64(C.sqlite3_last_insert_rowid(self.handle))
 }
 
 func (self *sqlConnection) sqlBusyTimeout(milliseconds int) int {
-	return int(C.sqlite3_busy_timeout(self.handle, C.int(milliseconds)));
+	return int(C.sqlite3_busy_timeout(self.handle, C.int(milliseconds)))
 }
 
 func (self *sqlConnection) sqlExtendedResultCodes(on bool) int {
-	v := map[bool]int{true: 1, false: 0}[on];
-	return int(C.sqlite3_extended_result_codes(self.handle, C.int(v)));
+	v := map[bool]int{true: 1, false: 0}[on]
+	return int(C.sqlite3_extended_result_codes(self.handle, C.int(v)))
 }
 
 func (self *sqlConnection) sqlErrorMessage() string {
-	cp := C.sqlite3_errmsg(self.handle);
+	cp := C.sqlite3_errmsg(self.handle)
 	if cp == nil {
 		// The call can't really fail since it returns
 		// a string constant, but let's be safe...
-		sqlPanic("can't get error message");
+		sqlPanic("can't get error message")
 	}
-	return C.GoString(cp);
+	return C.GoString(cp)
 }
 
 func (self *sqlConnection) sqlErrorCode() int {
-	return int(C.sqlite3_errcode(self.handle));
+	return int(C.sqlite3_errcode(self.handle))
 }
 
 func (self *sqlConnection) sqlExtendedErrorCode() int {
@@ -230,109 +230,109 @@ func (self *sqlConnection) sqlExtendedErrorCode() int {
 	// example Debian Lenny ships SQLite 3.5.9 only.
 	if sqlVersionNumber() < 3006005 {
 		// just return the regular error code...
-		return self.sqlErrorCode();
+		return self.sqlErrorCode()
 	}
-	return int(C.sqlite3_extended_errcode(self.handle));
+	return int(C.sqlite3_extended_errcode(self.handle))
 }
 
 func (self *sqlConnection) sqlPrepare(query string) (stat *sqlStatement, rc int) {
-	stat = new(sqlStatement);
+	stat = new(sqlStatement)
 
-	p := C.CString(query);
+	p := C.CString(query)
 	// TODO: may need tail to process statement sequence? or at
 	// least to generate an error that we missed some SQL?
 	//
 	// -1: process query until 0 byte
 	// nil: don't return tail pointer
-	rc = int(C.sqlite3_prepare_v2(self.handle, p, -1, &stat.handle, nil));
-	C.free(unsafe.Pointer(p));
+	rc = int(C.sqlite3_prepare_v2(self.handle, p, -1, &stat.handle, nil))
+	C.free(unsafe.Pointer(p))
 
 	// We are not supposed to get a handle on error. Since
 	// sqlite3_open() follows a different rule, however, we
 	// indulge in paranoia and check to make sure. We really
 	// don't want to return a statement on error.
 	if rc != StatusOk && stat.handle != nil {
-		_ = stat.sqlFinalize();
-		stat = nil;
+		_ = stat.sqlFinalize()
+		stat = nil
 	}
 
-	return;
+	return
 }
 
 // Wrappers as statement methods.
 
 func (self *sqlStatement) sqlBindParameterCount() int {
-	return int(C.sqlite3_bind_parameter_count(self.handle));
+	return int(C.sqlite3_bind_parameter_count(self.handle))
 }
 
 func (self *sqlStatement) sqlBindText(slot int, value string) int {
-	p := C.CString(value);
+	p := C.CString(value)
 	// SQLite counts slots from 1 instead of 0; -1 means "until
 	// end of string" here.
-	rc := int(C.wsq_bind_text(self.handle, C.int(slot+1), p, C.int(-1)));
-	C.free(unsafe.Pointer(p));
-	return rc;
+	rc := int(C.wsq_bind_text(self.handle, C.int(slot+1), p, C.int(-1)))
+	C.free(unsafe.Pointer(p))
+	return rc
 }
 
 func (self *sqlStatement) sqlStep() int {
-	return int(C.sqlite3_step(self.handle));
+	return int(C.sqlite3_step(self.handle))
 }
 
 func (self *sqlStatement) sqlSql() string {
-	cp := C.sqlite3_sql(self.handle);
+	cp := C.sqlite3_sql(self.handle)
 	if cp == nil {
 		// The call shouldn't fail unless we forgot to
 		// use sqlite3_prepare_v2()...
-		sqlPanic("can't get SQL statement");
+		sqlPanic("can't get SQL statement")
 	}
-	return C.GoString(cp);
+	return C.GoString(cp)
 }
 
 func (self *sqlStatement) sqlFinalize() int {
-	return int(C.sqlite3_finalize(self.handle));
+	return int(C.sqlite3_finalize(self.handle))
 }
 
 func (self *sqlStatement) sqlReset() int {
-	return int(C.sqlite3_reset(self.handle));
+	return int(C.sqlite3_reset(self.handle))
 }
 
 func (self *sqlStatement) sqlClearBindings() int {
-	return int(C.sqlite3_clear_bindings(self.handle));
+	return int(C.sqlite3_clear_bindings(self.handle))
 }
 
 func (self *sqlStatement) sqlColumnCount() int {
-	return int(C.sqlite3_column_count(self.handle));
+	return int(C.sqlite3_column_count(self.handle))
 }
 
 func (self *sqlStatement) sqlColumnType(col int) int {
-	return int(C.sqlite3_column_type(self.handle, C.int(col)));
+	return int(C.sqlite3_column_type(self.handle, C.int(col)))
 }
 
 func (self *sqlStatement) sqlColumnName(col int) string {
-	cp := C.wsq_column_name(self.handle, C.int(col));
+	cp := C.wsq_column_name(self.handle, C.int(col))
 	if cp == nil {
 		// TODO: not sure at all when and how this can
 		// fail...
-		sqlPanic("can't get column name");
+		sqlPanic("can't get column name")
 	}
-	return C.GoString(cp);
+	return C.GoString(cp)
 }
 
 func (self *sqlStatement) sqlColumnText(col int) string {
-	cp := C.wsq_column_text(self.handle, C.int(col));
+	cp := C.wsq_column_text(self.handle, C.int(col))
 	// Apparently this can return nil, for example if there
 	// is no value in the column. So we can't sanity check
 	// anything here...
-//	if cp == nil {
-//		sqlPanic("can't get column text");
-//	}
-	return C.GoString(cp);
+	//	if cp == nil {
+	//		sqlPanic("can't get column text");
+	//	}
+	return C.GoString(cp)
 }
 
 func (self *sqlStatement) sqlColumnDeclaredType(col int) string {
-	cp := C.sqlite3_column_decltype(self.handle, C.int(col));
+	cp := C.sqlite3_column_decltype(self.handle, C.int(col))
 	// This can return nil, for example if the column is an
 	// SQL expression and not a "real" column in a table. So
 	// again no sanity checks...
-	return C.GoString(cp);
+	return C.GoString(cp)
 }

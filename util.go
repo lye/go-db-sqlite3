@@ -11,4 +11,4 @@ import "fmt"
 // the URL passed to Open(). It's a shame that we have to
 // go from int to string and back to int, but thus is the
 // price of generality.
-func FlagsURL(options int) string	{ return fmt.Sprintf("flags=%d", options) }
+func FlagsURL(options int) string { return fmt.Sprintf("flags=%d", options) }

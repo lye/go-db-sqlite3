@@ -10,15 +10,15 @@ import "db"
 import "fmt"
 
 const (
-	impossibleName	= "randomassdatabase.db";
-	testName	= "testing.db";
+	impossibleName = "randomassdatabase.db"
+	testName       = "testing.db"
 )
 
 // Version()
 
 type versionTest struct {
-	key		string;
-	required	bool;
+	key      string
+	required bool
 }
 
 var versionTests = []versionTest{
@@ -28,7 +28,7 @@ var versionTests = []versionTest{
 }
 
 func TestVersion(t *testing.T) {
-	m, e := Version();
+	m, e := Version()
 
 	if e != nil {
 		t.Fatalf("Version() failed: %s", e)
@@ -48,44 +48,44 @@ func TestVersion(t *testing.T) {
 // Open()
 
 func openNonexisting(t *testing.T) {
-	c, e := Open(impossibleName);
+	c, e := Open(impossibleName)
 	if e == nil {
-		fmt.Println(e);
-		t.Error("Opened non-existing database");
-		c.Close();
+		fmt.Println(e)
+		t.Error("Opened non-existing database")
+		c.Close()
 	}
 }
 func openCreate(t *testing.T) {
-	c, e := Open(testName + "?" + FlagsURL(OpenCreate));
+	c, e := Open(testName + "?" + FlagsURL(OpenCreate))
 	if e != nil {
-		fmt.Println(e);
-		t.Error("Failed to create database");
+		fmt.Println(e)
+		t.Error("Failed to create database")
 	} else {
 		c.Close()
 	}
 }
 func openExisting(t *testing.T) {
-	c, e := Open(testName + "?" + FlagsURL(OpenReadOnly));
+	c, e := Open(testName + "?" + FlagsURL(OpenReadOnly))
 	if e != nil {
-		fmt.Println(e);
-		t.Error("Failed to open existing database");
+		fmt.Println(e)
+		t.Error("Failed to open existing database")
 	} else {
 		c.Close()
 	}
 }
 
 func TestOpen(t *testing.T) {
-	openNonexisting(t);
-	openCreate(t);
-	openExisting(t);
+	openNonexisting(t)
+	openCreate(t)
+	openExisting(t)
 }
 
 // ExecuteDirectly(): tests Prepare() and Execute() in turn
 // sets up the database for further tests
 
 type insertTest struct {
-	login		string;
-	password	string;
+	login    string
+	password string
 }
 
 var insertTests = []insertTest{
@@ -96,36 +96,36 @@ var insertTests = []insertTest{
 }
 
 func TestCreate(t *testing.T) {
-	c, e := Open(testName + "?" + FlagsURL(OpenReadWrite));
+	c, e := Open(testName + "?" + FlagsURL(OpenReadWrite))
 	if e != nil {
 		t.Fatal("Failed to open existing database")
 	}
 
 	_, e = db.ExecuteDirectly(c,
-		"CREATE TABLE Users(" +
-			"login VARCHAR NOT NULL UNIQUE," +
-			"password VARCHAR NOT NULL," +
-			"active BOOLEAN NOT NULL DEFAULT 0," +
-			"last TIMESTAMP," +
-			"PRIMARY KEY (login)" +
-			")");
+		"CREATE TABLE Users("+
+			"login VARCHAR NOT NULL UNIQUE,"+
+			"password VARCHAR NOT NULL,"+
+			"active BOOLEAN NOT NULL DEFAULT 0,"+
+			"last TIMESTAMP,"+
+			"PRIMARY KEY (login)"+
+			")")
 	if e != nil {
 		t.Fatal("Failed to create table")
 	}
 
 	for _, k := range insertTests {
 		_, e = db.ExecuteDirectly(c,
-			"INSERT INTO Users (login, password)" +
+			"INSERT INTO Users (login, password)"+
 				"VALUES (?, ?);",
-			k.login, k.password);
+			k.login, k.password)
 		if e != nil {
 			t.Fatal("Failed to insert")
 		}
 	}
 
-	c.Close();
+	c.Close()
 }
 
 // clean up: remove the test database
 
-func TestDummy(t *testing.T)	{ os.Remove(testName) }
+func TestDummy(t *testing.T) { os.Remove(testName) }

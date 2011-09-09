@@ -4,13 +4,13 @@
 
 package sqlite3
 
-import "os";
+import "os"
 
 type Result struct {
-	data	[]interface{};
-	error	os.Error;
+	data  []interface{}
+	error os.Error
 }
 
-func (self *Result) Data() []interface{}	{ return self.data }
+func (self *Result) Data() []interface{} { return self.data }
 
-func (self *Result) Error() os.Error	{ return self.error }
+func (self *Result) Error() os.Error { return self.error }
