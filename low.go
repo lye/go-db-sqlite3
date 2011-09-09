@@ -50,6 +50,50 @@ const (
 	sqlNullType;
 )
 
+// Constants for sqlite3_config() used only internally.
+// In fact only *one* is used. See SQLite documentation
+// for details.
+const (
+	configSingleThread = int(C.SQLITE_CONFIG_SINGLETHREAD);
+	configMultiThread = int(C.SQLITE_CONFIG_MULTITHREAD);
+	configSerialized = int(C.SQLITE_CONFIG_SERIALIZED);
+	configMalloc = int (C.SQLITE_CONFIG_MALLOC);
+	configGetMalloc = int (C.SQLITE_CONFIG_GETMALLOC);
+	configScratch = int(C.SQLITE_CONFIG_SCRATCH);
+	configPageCache = int(C.SQLITE_CONFIG_PAGECACHE);
+	configHeap = int(C.SQLITE_CONFIG_HEAP);
+	configMemStatus = int(C.SQLITE_CONFIG_MEMSTATUS);
+	configMutex = int(C.SQLITE_CONFIG_MUTEX);
+	configGetMutex = int(C.SQLITE_CONFIG_GETMUTEX);
+	configLookAside = int(C.SQLITE_CONFIG_LOOKASIDE);
+	configPCache = int(C.SQLITE_CONFIG_PCACHE);
+	configGetPCache = int(C.SQLITE_CONFIG_GETPCACHE);
+)
+
+// These constants can be or'd together and passed as the
+// "flags" option to Open(). Some of them only apply if
+// the "vfs" option is also passed. See SQLite documentation
+// for details. Note that we always force OpenFullMutex,
+// so passing OpenNoMutex has no effect. See also FlagURL().
+const (
+	OpenReadOnly		= int(C.SQLITE_OPEN_READONLY);
+	OpenReadWrite		= int(C.SQLITE_OPEN_READWRITE);
+	OpenCreate		= int(C.SQLITE_OPEN_CREATE);
+	OpenDeleteOnClose	= int(C.SQLITE_OPEN_DELETEONCLOSE);	// VFS only
+	OpenExclusive		= int(C.SQLITE_OPEN_EXCLUSIVE);	// VFS only
+	OpenMainDb		= int(C.SQLITE_OPEN_MAIN_DB);	// VFS only
+	OpenTempDb		= int(C.SQLITE_OPEN_TEMP_DB);	// VFS only
+	OpenTransientDb		= int(C.SQLITE_OPEN_TRANSIENT_DB);	// VFS only
+	OpenMainJournal		= int(C.SQLITE_OPEN_MAIN_JOURNAL);	// VFS only
+	OpenTempJournal		= int(C.SQLITE_OPEN_TEMP_JOURNAL);	// VFS only
+	OpenSubJournal		= int(C.SQLITE_OPEN_SUBJOURNAL);	// VFS only
+	OpenMasterJournal	= int(C.SQLITE_OPEN_MASTER_JOURNAL);	// VFS only
+	OpenNoMutex		= int(C.SQLITE_OPEN_NOMUTEX);
+	OpenFullMutex		= int(C.SQLITE_OPEN_FULLMUTEX);
+	OpenSharedCache		= int(C.SQLITE_OPEN_SHAREDCACHE);
+	OpenPrivateCache	= int(C.SQLITE_OPEN_PRIVATECACHE);
+)
+
 // If something goes wrong on this level, we simply bomb
 // out, there's no use trying to recover; note that most
 // calls to sqlPanic() are for things that can never,

@@ -12,52 +12,6 @@ import (
 	"strconv";
 )
 
-// These constants can be or'd together and passed as the
-// "flags" option to Open(). Some of them only apply if
-// the "vfs" option is also passed. See SQLite documentation
-// for details. Note that we always force OpenFullMutex,
-// so passing OpenNoMutex has no effect. See also FlagURL().
-const (
-	OpenReadOnly		= 0x00000001;
-	OpenReadWrite		= 0x00000002;
-	OpenCreate		= 0x00000004;
-	OpenDeleteOnClose	= 0x00000008;	// VFS only
-	OpenExclusive		= 0x00000010;	// VFS only
-	OpenMainDb		= 0x00000100;	// VFS only
-	OpenTempDb		= 0x00000200;	// VFS only
-	OpenTransientDb		= 0x00000400;	// VFS only
-	OpenMainJournal		= 0x00000800;	// VFS only
-	OpenTempJournal		= 0x00001000;	// VFS only
-	OpenSubJournal		= 0x00002000;	// VFS only
-	OpenMasterJournal	= 0x00004000;	// VFS only
-	OpenNoMutex		= 0x00008000;
-	OpenFullMutex		= 0x00010000;
-	OpenSharedCache		= 0x00020000;
-	OpenPrivateCache	= 0x00040000;
-)
-
-// Constants for sqlite3_config() used only internally.
-// In fact only *one* is used. See SQLite documentation
-// for details.
-const (
-	_	= iota;
-	configSingleThread;
-	configMultiThread;
-	configSerialized;
-	configMalloc;
-	configGetMalloc;
-	configScratch;
-	configPageCache;
-	configHeap;
-	configMemStatus;
-	configMutex;
-	configGetMutex;
-	_;
-	configLookAside;
-	configPCache;
-	configGetPCache;
-)
-
 // after we run into a locked database/table,
 // we'll retry for this long
 const defaultTimeoutMilliseconds = 16 * 1000
