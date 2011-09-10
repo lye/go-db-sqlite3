@@ -80,8 +80,8 @@ func (self *Connection) Changes() (changes int, error os.Error) {
 	return
 }
 
-func (self *Connection) LastId() (id int64, error os.Error) {
+func (self *Connection) LastId() (id int, error os.Error) {
 	// TODO: really returns sqlite3_int64, what to do?
-	id = self.handle.sqlLastInsertRowId()
+	id = int(self.handle.sqlLastInsertRowId())
 	return
 }
