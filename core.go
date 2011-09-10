@@ -108,7 +108,7 @@ func open(url string) (connection db.Connection, error os.Error) {
 	// default to OpenReadWrite. Omitting both will cause Sqlite3
 	// to barf (with a no memory exception, strangely enough) 
 	if flags&(OpenReadOnly|OpenReadWrite) == 0 {
-		flags |= OpenReadWrite
+		flags |= OpenReadWrite | OpenCreate
 	}
 
 	conn := new(Connection)
