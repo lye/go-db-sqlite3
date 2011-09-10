@@ -29,6 +29,11 @@ int wsq_bind_text(sqlite3_stmt *statement, int i, const char* text, int n)
 	return sqlite3_bind_text(statement, i, text, n, SQLITE_TRANSIENT);
 }
 
+int wsq_bind_int64(sqlite3_stmt *statement, int i, long long value) 
+{
+	return sqlite3_bind_int64(statement, i, value);
+}
+
 // needed to work around the ... argument of sqlite3_config(); if
 // we ever require an option with parameters, we'll have to add more
 // wrappers
@@ -272,6 +277,22 @@ func (self *sqlStatement) sqlBindText(slot int, value string) int {
 	rc := int(C.wsq_bind_text(self.handle, C.int(slot+1), p, C.int(-1)))
 	C.free(unsafe.Pointer(p))
 	return rc
+}
+
+func (self *sqlStatement) sqlBindInt(slot int, value int) int {
+	return int(C.sqlite3_bind_int(self.handle, C.int(slot+1), C.int(value)))
+}
+
+func (self *sqlStatement) sqlBindInt64(slot int, value int64) int {
+	return int(C.wsq_bind_int64(self.handle, C.int(slot+1), C.longlong(value)))
+}
+
+func (self *sqlStatement) sqlBindDouble(slot int, value float64) int {
+	return int(C.sqlite3_bind_double(self.handle, C.int(slot+1), C.double(value)))
+}
+
+func (self *sqlStatement) sqlBindNil(slot int) int {
+	return int(C.sqlite3_bind_null(self.handle, C.int(slot+1)))
 }
 
 func (self *sqlStatement) sqlStep() int {

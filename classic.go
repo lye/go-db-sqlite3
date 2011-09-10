@@ -17,30 +17,6 @@ import (
 	"reflect"
 )
 
-// stolen from fmt package, special-cases interface values
-func getField(v *reflect.Value, i int) reflect.Value {
-	val := v.Index(i)
-
-	if val.CanInterface() {
-		if inter := val.Interface(); inter != nil {
-			return reflect.ValueOf(inter)
-		}
-	}
-
-	return val
-}
-
-func struct2array(s *reflect.Value) (r []reflect.Value) {
-	l := s.Len()
-	r = make([]reflect.Value, l)
-
-	for i := 0; i < l; i++ {
-		r[i] = getField(s, i)
-	}
-
-	return
-}
-
 // Execute precompiled statement with given parameters
 // (if any). The statement stays valid even if we fail
 // to execute with given parameters.
@@ -58,11 +34,32 @@ func (self *Connection) ExecuteClassic(statement db.Statement, parameters ...int
 		return
 	}
 
-	pa := struct2array(&p)
+	for k, param := range parameters {
+		v := reflect.ValueOf(param)
+		rc := 1
 
-	for k, v := range pa {
-		q := v.String()
-		rc := s.handle.sqlBindText(k, q)
+		switch v.Kind() {
+			case reflect.Bool:
+				rc = s.handle.sqlBindInt64(k, v.Int())
+			case reflect.Int:
+				rc = s.handle.sqlBindInt64(k, v.Int())
+			case reflect.Int8:
+				rc = s.handle.sqlBindInt64(k, v.Int())
+			case reflect.Int16:
+				rc = s.handle.sqlBindInt64(k, v.Int())
+			case reflect.Int32:
+				rc = s.handle.sqlBindInt64(k, v.Int())
+			case reflect.Int64:
+				rc = s.handle.sqlBindInt64(k, v.Int())
+			case reflect.String:
+				rc = s.handle.sqlBindText(k, v.String())
+			case reflect.Float32:
+				rc = s.handle.sqlBindDouble(k, v.Float())
+			case reflect.Float64:
+				rc = s.handle.sqlBindDouble(k, v.Float())
+			default:
+				panic("XXX: Don't know how to bind " + v.Type().Name())
+		}
 
 		if rc != StatusOk {
 			error = self.error()
