@@ -56,7 +56,7 @@ func (self *Connection) Prepare(query string) (statement db.Statement, error os.
 
 func (self *Connection) Execute(statement db.Statement, parameters ...interface{}) (rs db.ResultSet, error os.Error) {
 	var crs db.ClassicResultSet
-	crs, error = self.ExecuteClassic(statement, parameters)
+	crs, error = self.ExecuteClassic(statement, parameters...)
 	if error != nil {
 		return
 	}
